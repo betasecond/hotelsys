@@ -13,10 +13,10 @@
   "dependencies": {
     "@libsql/client": "^0.15.9",
     "bcryptjs": "^3.0.2",
-    "drizzle-orm": "^0.30.0",
+    "drizzle-orm": "^0.44.2",
     "nuxt": "^3.17.5",
-    "vue": "^3.4.0",
-    "vue-router": "^4.3.0"
+    "vue": "^3.5.16",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",

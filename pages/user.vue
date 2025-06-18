@@ -114,7 +114,7 @@ const bookingForm = reactive({
 
 async function viewRooms() {
   try {
-    const data = await $fetch('/api/rooms');
+    const data = await $fetch('/api/rooms/all');
     rooms.value = data;
   } catch (error: any) {
     message.value = error.data?.message || '加载房间失败';
