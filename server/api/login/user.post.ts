@@ -1,4 +1,7 @@
 import { defineEventHandler, readBody, setResponseStatus } from 'h3';
+import { db, customers } from '~/server/db';
+import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -9,14 +12,31 @@ export default defineEventHandler(async (event) => {
     return { message: '请填写手机号和密码' };
   }
 
-  // TODO: Replace with database user lookup and password verification
-  if (contact === '1234567890' && password === 'password') {
+  try {
+    const user = await db.query.customers.findFirst({
+      where: eq(customers.contact, contact),
+    });
+
+    if (!user) {
+      setResponseStatus(event, 401);
+      return { message: '手机号或密码错误' };
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+
+    if (!isPasswordValid) {
+      setResponseStatus(event, 401);
+      return { message: '手机号或密码错误' };
+    }
+
     return {
       message: '登录成功！',
-      customerId: 'dummy-customer-id-123',
+      customerId: user.id,
     };
-  } else {
-    setResponseStatus(event, 401);
-    return { message: '手机号或密码错误' };
+
+  } catch (error) {
+    console.error('Login error:', error);
+    setResponseStatus(event, 500);
+    return { message: '登录失败，请稍后重试' };
   }
 }); 
