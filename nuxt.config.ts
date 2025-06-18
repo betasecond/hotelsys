@@ -9,8 +9,27 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    server: {
+      fs: {
+        allow: [
+          process.cwd(),
+          'C:/Users/nbdhc/node_modules',
+          '../'
+        ]
+      }
+    },
+    optimizeDeps: {
+      include: ['ufo']
+    }
   },
   runtimeConfig: {
     adminPassword: '', // NUXT_ADMIN_PASSWORD
+  },
+  nitro: {
+    esbuild: {
+      options: {
+        target: 'node18'
+      }
+    }
   }
 })
