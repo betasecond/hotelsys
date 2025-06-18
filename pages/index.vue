@@ -118,7 +118,15 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-  // TODO: Implement register logic
-  console.log('Registering with data:', registerForm);
+  try {
+    const response = await $fetch('/api/register', {
+      method: 'POST',
+      body: registerForm
+    });
+    message.value = response.message;
+    showLogin();
+  } catch (error: any) {
+    message.value = error.data?.message || '注册失败';
+  }
 }
 </script> 
