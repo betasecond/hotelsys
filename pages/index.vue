@@ -113,8 +113,33 @@ function showLogin() {
 }
 
 async function handleLogin() {
-  // TODO: Implement login logic
-  console.log('Logging in with role:', role.value, 'and credentials:', loginForm);
+  try {
+    if (role.value === 'user') {
+      const response = await $fetch('/api/login/user', {
+        method: 'POST',
+        body: {
+          contact: loginForm.contact,
+          password: loginForm.password
+        }
+      });
+      message.value = response.message;
+      if (response.customerId) {
+        localStorage.setItem('customerId', response.customerId);
+        await navigateTo('/user');
+      }
+    } else { // admin
+      const response = await $fetch('/api/login/admin', {
+        method: 'POST',
+        body: {
+          password: loginForm.password
+        }
+      });
+      message.value = response.message;
+      await navigateTo('/admin');
+    }
+  } catch (error: any) {
+    message.value = error.data?.message || '登录失败';
+  }
 }
 
 async function handleRegister() {
